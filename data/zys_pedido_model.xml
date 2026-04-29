@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+    <!-- MODELO -->
+    <record id="model_x_zys_pedido" model="ir.model">
+        <field name="name">Pedido ZYS</field>
+        <field name="model">x_zys_pedido</field>
+        <field name="state">manual</field>
+        <field name="is_mail_thread" eval="True"/>
+    </record>
+
+    <!-- CAMPOS -->
+    <record id="field_x_zys_pedido__x_fecha" model="ir.model.fields">
+        <field name="name">x_fecha</field>
+        <field name="field_description">Fecha</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="ttype">date</field>
+        <field name="required" eval="True"/>
+    </record>
+
+    <record id="field_x_zys_pedido__x_matricula" model="ir.model.fields">
+        <field name="name">x_matricula</field>
+        <field name="field_description">Matrícula</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="ttype">char</field>
+        <field name="required" eval="True"/>
+    </record>
+
+    <record id="field_x_zys_pedido__x_marca" model="ir.model.fields">
+        <field name="name">x_marca</field>
+        <field name="field_description">Marca</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="ttype">char</field>
+    </record>
+
+    <record id="field_x_zys_pedido__x_cliente_id" model="ir.model.fields">
+        <field name="name">x_cliente_id</field>
+        <field name="field_description">Cliente</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="ttype">many2one</field>
+        <field name="relation">res.partner</field>
+        <field name="required" eval="True"/>
+        <field name="on_delete">restrict</field>
+    </record>
+
+    <record id="field_x_zys_pedido__x_telefono" model="ir.model.fields">
+        <field name="name">x_telefono</field>
+        <field name="field_description">Teléfono</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="ttype">char</field>
+    </record>
+
+    <record id="field_x_zys_pedido__x_product_id" model="ir.model.fields">
+        <field name="name">x_product_id</field>
+        <field name="field_description">Producto</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="ttype">many2one</field>
+        <field name="relation">product.product</field>
+        <field name="required" eval="True"/>
+        <field name="on_delete">restrict</field>
+    </record>
+
+    <record id="field_x_zys_pedido__x_descripcion" model="ir.model.fields">
+        <field name="name">x_descripcion</field>
+        <field name="field_description">Descripción</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="ttype">char</field>
+    </record>
+
+    <record id="field_x_zys_pedido__x_referencia" model="ir.model.fields">
+        <field name="name">x_referencia</field>
+        <field name="field_description">Referencia</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="ttype">char</field>
+    </record>
+
+    <record id="field_x_zys_pedido__x_cantidad" model="ir.model.fields">
+        <field name="name">x_cantidad</field>
+        <field name="field_description">Cantidad</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="ttype">float</field>
+        <field name="required" eval="True"/>
+    </record>
+
+    <record id="field_x_zys_pedido__x_precio" model="ir.model.fields">
+        <field name="name">x_precio</field>
+        <field name="field_description">Precio Un.</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="ttype">float</field>
+    </record>
+
+    <record id="field_x_zys_pedido__x_proveedor_id" model="ir.model.fields">
+        <field name="name">x_proveedor_id</field>
+        <field name="field_description">Proveedor</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="ttype">many2one</field>
+        <field name="relation">res.partner</field>
+    </record>
+
+    <record id="field_x_zys_pedido__x_dependiente_id" model="ir.model.fields">
+        <field name="name">x_dependiente_id</field>
+        <field name="field_description">Atendido por</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="ttype">many2one</field>
+        <field name="relation">res.users</field>
+    </record>
+
+    <record id="field_x_zys_pedido__x_situacion" model="ir.model.fields">
+        <field name="name">x_situacion</field>
+        <field name="field_description">Notas / Situación</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="ttype">text</field>
+    </record>
+
+    <record id="field_x_zys_pedido__x_status" model="ir.model.fields">
+        <field name="name">x_status</field>
+        <field name="field_description">Estado</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="ttype">selection</field>
+        <field name="selection">[('PENDIENTE', 'Pendiente de Pedir'), ('PEDIDO', 'Pedido'), ('RECIBIDO', 'Recibido'), ('RETIRADO', 'Retirado'), ('PAGADO', 'Pagado'), ('DEVOLUCION', 'Devolución'), ('ANULADO', 'Anulado')]</field>
+        <field name="required" eval="True"/>
+    </record>
+    <!-- Campo: x_sale_order_id (enlace al presupuesto generado) -->
+    <record id="field_x_zys_pedido__x_sale_order_id" model="ir.model.fields">
+        <field name="name">x_sale_order_id</field>
+        <field name="field_description">Presupuesto</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="ttype">many2one</field>
+        <field name="relation">sale.order</field>
+    </record>
+
+</data>
+</odoo>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+    <!-- Formato de papel tipo ticket (80mm ancho) -->
+    <record id="paperformat_zys_ticket" model="report.paperformat">
+        <field name="name">Ticket ZYS 80mm</field>
+        <field name="default" eval="False"/>
+        <field name="format">custom</field>
+        <field name="page_height">130</field>
+        <field name="page_width">80</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">3</field>
+        <field name="margin_bottom">3</field>
+        <field name="margin_left">3</field>
+        <field name="margin_right">3</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">3</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <!-- Acción del informe (aparece en menú Imprimir) -->
+    <record id="action_report_zys_ticket" model="ir.actions.report">
+        <field name="name">Ticket de Pedido</field>
+        <field name="model">x_zys_pedido</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zys_gestor_pedidos.report_zys_ticket_document</field>
+        <field name="report_file">zys_gestor_pedidos.report_zys_ticket_document</field>
+        <field name="paperformat_id" ref="paperformat_zys_ticket"/>
+        <field name="binding_model_id" ref="model_x_zys_pedido"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Plantilla QWeb del ticket -->
+    <template id="report_zys_ticket_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <div style="width:74mm; margin:0 auto; font-family:'Courier New',monospace; font-size:11px; padding:4mm; color:#000;">
+
+                    <!-- Cabecera -->
+                    <div style="text-align:center; border-bottom:2px dashed #000; padding-bottom:4px; margin-bottom:6px;">
+                        <div style="font-size:15px; font-weight:bold; letter-spacing:2px;">ZYS</div>
+                        <div style="font-size:10px;">LUBRICANTES Y RECAMBIOS</div>
+                        <div style="font-size:9px; margin-top:2px;">TICKET DE PEDIDO DE PIEZA</div>
+                    </div>
+
+                    <!-- Datos del vehículo y cliente -->
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:4px;">
+                        <tr>
+                            <td style="font-weight:bold; width:35%;">MATRÍCULA</td>
+                            <td style="font-size:14px; font-weight:bold;"><t t-esc="doc.x_matricula"/></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:bold;">MARCA</td>
+                            <td><t t-esc="doc.x_marca or '-'"/></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:bold;">CLIENTE</td>
+                            <td><t t-esc="doc.x_cliente_id.name"/></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:bold;">TEL.</td>
+                            <td><t t-esc="doc.x_telefono or doc.x_cliente_id.phone or '-'"/></td>
+                        </tr>
+                    </table>
+
+                    <!-- Separador -->
+                    <div style="border-top:1px dashed #000; margin:4px 0;"></div>
+
+                    <!-- Pieza solicitada -->
+                    <div style="font-weight:bold; font-size:10px; margin-bottom:3px;">PIEZA SOLICITADA</div>
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:4px;">
+                        <tr>
+                            <td style="font-weight:bold; width:35%;">PRODUCTO</td>
+                            <td><t t-esc="doc.x_product_id.name"/></td>
+                        </tr>
+                        <tr t-if="doc.x_descripcion">
+                            <td style="font-weight:bold;">DESCRIPCIÓN</td>
+                            <td><t t-esc="doc.x_descripcion"/></td>
+                        </tr>
+                        <tr t-if="doc.x_referencia">
+                            <td style="font-weight:bold;">REFERENCIA</td>
+                            <td><t t-esc="doc.x_referencia"/></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:bold;">CANTIDAD</td>
+                            <td><t t-esc="doc.x_cantidad"/></td>
+                        </tr>
+                        <tr t-if="doc.x_proveedor_id">
+                            <td style="font-weight:bold;">PROVEEDOR</td>
+                            <td><t t-esc="doc.x_proveedor_id.name"/></td>
+                        </tr>
+                    </table>
+
+                    <!-- Separador -->
+                    <div style="border-top:1px dashed #000; margin:4px 0;"></div>
+
+                    <!-- Estado y notas -->
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:4px;">
+                        <tr>
+                            <td style="font-weight:bold; width:35%;">ESTADO</td>
+                            <td style="font-weight:bold;"><t t-esc="dict([('PENDIENTE','Pendiente'),('PEDIDO','Pedido'),('RECIBIDO','RECIBIDO ✓'),('RETIRADO','RETIRADO'),('PAGADO','PAGADO'),('DEVOLUCION','Devolución'),('ANULADO','Anulado')]).get(doc.x_status, doc.x_status)"/></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:bold;">ATENDIDO</td>
+                            <td><t t-esc="doc.x_dependiente_id.name or '-'"/></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:bold;">FECHA</td>
+                            <td><t t-esc="doc.x_fecha"/></td>
+                        </tr>
+                    </table>
+
+                    <t t-if="doc.x_situacion">
+                        <div style="border-top:1px dashed #000; margin:4px 0; padding-top:3px; font-size:9px;">
+                            <strong>NOTAS:</strong> <t t-esc="doc.x_situacion"/>
+                        </div>
+                    </t>
+
+                    <!-- Pie de ticket -->
+                    <div style="border-top:2px dashed #000; margin-top:6px; padding-top:4px; text-align:center; font-size:9px;">
+                        Gracias por confiar en ZYS
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</data>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+    <!-- Regla de automatización: crear presupuesto al pasar a estado PEDIDO -->
+    <record id="automation_zys_crear_presupuesto" model="base.automation">
+        <field name="name">ZYS: Crear Presupuesto al cambiar a PEDIDO</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="trigger">on_write</field>
+        <field name="filter_pre_domain">[('x_status', '!=', 'PEDIDO')]</field>
+        <field name="filter_domain">[('x_status', '=', 'PEDIDO')]</field>
+        <field name="action_server_ids" eval="[(4, ref('action_server_zys_crear_presupuesto'))]"/>
+        <field name="active" eval="True"/>
+    </record>
+
+</data>
+</odoo>

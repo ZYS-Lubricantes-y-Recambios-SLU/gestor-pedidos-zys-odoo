@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+    <!-- Acción unificada: Marcar como PEDIDO + Crear Presupuesto + Abrirlo -->
+    <record id="action_server_zys_crear_presupuesto" model="ir.actions.server">
+        <field name="name">Marcar como PEDIDO y Crear Presupuesto</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="binding_model_id" ref="model_x_zys_pedido"/>
+        <field name="binding_type">action</field>
+        <field name="state">code</field>
+        <field name="code">
+so_id = False
+for rec in records:
+    if not rec.x_sale_order_id:
+        so = env['sale.order'].create({
+            'partner_id': rec.x_cliente_id.id,
+            'origin': 'ZYS - ' + (rec.x_matricula or ''),
+            'note': rec.x_situacion or '',
+            'user_id': rec.x_dependiente_id.id if rec.x_dependiente_id else env.uid,
+        })
+        env['sale.order.line'].create({
+            'order_id': so.id,
+            'product_id': rec.x_product_id.id,
+            'name': rec.x_descripcion or rec.x_product_id.display_name,
+            'product_uom_qty': rec.x_cantidad or 1.0,
+            'price_unit': rec.x_precio if rec.x_precio else rec.x_product_id.lst_price,
+        })
+        rec.write({'x_sale_order_id': so.id, 'x_status': 'PEDIDO'})
+        so_id = so.id
+    else:
+        rec.write({'x_status': 'PEDIDO'})
+        so_id = rec.x_sale_order_id.id
+if so_id:
+    action = {
+        'type': 'ir.actions.act_window',
+        'res_model': 'sale.order',
+        'res_id': so_id,
+        'view_mode': 'form',
+        'target': 'current',
+    }
+        </field>
+    </record>
+
+</data>
+</odoo>
+
