@@ -85,7 +85,7 @@
 
     <record id="field_x_zys_pedido__x_precio" model="ir.model.fields">
         <field name="name">x_precio</field>
-        <field name="field_description">Precio Un.</field>
+        <field name="field_description">PRECIO SIN IVA (VERIFICAR)</field>
         <field name="model_id" ref="model_x_zys_pedido"/>
         <field name="ttype">float</field>
     </record>
@@ -118,9 +118,24 @@
         <field name="field_description">Estado</field>
         <field name="model_id" ref="model_x_zys_pedido"/>
         <field name="ttype">selection</field>
-        <field name="selection">[('PENDIENTE', 'Pendiente de Pedir'), ('PEDIDO', 'Pedido'), ('RECIBIDO', 'Recibido'), ('RETIRADO', 'Retirado'), ('PAGADO', 'Pagado'), ('DEVOLUCION', 'Devolución'), ('ANULADO', 'Anulado')]</field>
+        <field name="selection">[('PENDIENTE', 'Pendiente de Pedir'), ('PEDIDO', 'Pedido'), ('PRESUPUESTADO', 'Presupuestado'), ('RECIBIDO', 'Recibido'), ('RETIRADO', 'Retirado'), ('PAGADO', 'Pagado'), ('DEVOLUCION', 'Devolución'), ('ANULADO', 'Anulado')]</field>
         <field name="required" eval="True"/>
     </record>
+
+    <record id="field_x_zys_pedido__x_iva" model="ir.model.fields">
+        <field name="name">x_iva</field>
+        <field name="field_description">IVA</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="ttype">float</field>
+    </record>
+
+    <record id="field_x_zys_pedido__x_precio_iva" model="ir.model.fields">
+        <field name="name">x_precio_iva</field>
+        <field name="field_description">Precio con IVA</field>
+        <field name="model_id" ref="model_x_zys_pedido"/>
+        <field name="ttype">float</field>
+    </record>
+
     <!-- Campo: x_sale_order_id (enlace al presupuesto generado) -->
     <record id="field_x_zys_pedido__x_sale_order_id" model="ir.model.fields">
         <field name="name">x_sale_order_id</field>
@@ -128,6 +143,15 @@
         <field name="model_id" ref="model_x_zys_pedido"/>
         <field name="ttype">many2one</field>
         <field name="relation">sale.order</field>
+    </record>
+
+    <!-- Campo en sale.order para vincular de vuelta al pedido ZYS -->
+    <record id="field_sale_order__x_zys_pedido_id" model="ir.model.fields">
+        <field name="name">x_zys_pedido_id</field>
+        <field name="field_description">Pedido ZYS Origen</field>
+        <field name="model_id" model="ir.model" search="[('model','=','sale.order')]"/>
+        <field name="ttype">many2one</field>
+        <field name="relation">x_zys_pedido</field>
     </record>
 
 </data>

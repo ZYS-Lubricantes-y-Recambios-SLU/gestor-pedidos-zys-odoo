@@ -13,5 +13,34 @@
         <field name="active" eval="True"/>
     </record>
 
+    <!-- Regla: Marcar como PRESUPUESTADO al confirmar SO -->
+    <record id="automation_zys_confirmar_presupuesto" model="base.automation">
+        <field name="name">ZYS: Marcar como PRESUPUESTADO al confirmar SO</field>
+        <field name="model_id" model="ir.model" search="[('model','=','sale.order')]"/>
+        <field name="trigger">on_write</field>
+        <field name="filter_pre_domain">[('state', 'in', ['draft', 'sent'])]</field>
+        <field name="filter_domain">[('state', '=', 'sale')]</field>
+        <field name="action_server_ids" eval="[(0, 0, {
+            'name': 'Actualizar Estado Pedido ZYS',
+            'state': 'code',
+            'code': 'if record.x_zys_pedido_id: record.x_zys_pedido_id.write({\'x_status\': \'PRESUPUESTADO\'})'
+        })]"/>
+        <field name="active" eval="True"/>
+    </record>
+
+    <!-- Regla: Marcar como PAGADO al facturar -->
+    <record id="automation_zys_pagado" model="base.automation">
+        <field name="name">ZYS: Marcar como PAGADO al facturar</field>
+        <field name="model_id" model="ir.model" search="[('model','=','sale.order')]"/>
+        <field name="trigger">on_write</field>
+        <field name="filter_domain">[('invoice_status', '=', 'invoiced')]</field>
+        <field name="action_server_ids" eval="[(0, 0, {
+            'name': 'Actualizar Estado Pedido ZYS a Pagado',
+            'state': 'code',
+            'code': 'if record.x_zys_pedido_id: record.x_zys_pedido_id.write({\'x_status\': \'PAGADO\'})'
+        })]"/>
+        <field name="active" eval="True"/>
+    </record>
+
 </data>
 </odoo>

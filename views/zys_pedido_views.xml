@@ -20,10 +20,12 @@
                 <field name="x_descripcion"/>
                 <field name="x_cantidad"/>
                 <field name="x_precio"/>
+                <field name="x_iva" optional="show"/>
+                <field name="x_precio_iva" optional="show"/>
                 <field name="x_status" widget="badge"
                        decoration-danger="x_status=='PENDIENTE'"
                        decoration-warning="x_status=='PEDIDO'"
-                       decoration-info="x_status=='RECIBIDO'"
+                       decoration-info="x_status in ['RECIBIDO','PRESUPUESTADO']"
                        decoration-success="x_status in ['RETIRADO','PAGADO']"
                        decoration-muted="x_status in ['ANULADO','DEVOLUCION']"/>
                 <field name="x_dependiente_id"/>
@@ -53,7 +55,7 @@
                             invisible="x_status != 'PENDIENTE'"/>
                     <!-- Barra de progreso del estado (solo visual, sin clickar PEDIDO) -->
                     <field name="x_status" widget="statusbar"
-                           statusbar_visible="PENDIENTE,PEDIDO,RECIBIDO,RETIRADO,PAGADO"
+                           statusbar_visible="PENDIENTE,PEDIDO,PRESUPUESTADO,RECIBIDO,RETIRADO,PAGADO"
                            options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
@@ -81,6 +83,8 @@
                                    options="{'quick_create': True}"
                                    placeholder="Busca o crea un contacto..."/>
                             <field name="x_telefono" placeholder="Teléfono"/>
+                            <field name="x_iva" string="💰 IVA (21%)" class="oe_inline"/>
+                            <field name="x_precio_iva" string="🔥 TOTAL CON IVA" class="oe_inline fw-bold text-primary" style="font-size: 1.2em;"/>
                         </group>
                         <group string="Estado y Gestión">
                             <field name="x_fecha"/>
@@ -100,6 +104,8 @@
                         <group>
                             <field name="x_cantidad"/>
                             <field name="x_precio"/>
+                            <field name="x_iva"/>
+                            <field name="x_precio_iva" class="fw-bold text-primary"/>
                             <field name="x_proveedor_id"
                                    options="{'quick_create': True}"
                                    placeholder="Proveedor donde se pide"/>
@@ -149,5 +155,10 @@
               parent="menu_x_zys_pedidos_root"
               action="action_x_zys_presupuestos"
               sequence="20"/>
+
+    <menuitem id="menu_x_zys_verificacion"
+              name="ZYS - VERIFICACIÓN"
+              parent="menu_x_zys_pedidos_root"
+              sequence="100"/>
 
 </odoo>

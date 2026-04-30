@@ -12,12 +12,26 @@
         <field name="code">
 so_id = False
 for rec in records:
+    # Calcular IVA (suponiendo 21% por defecto si no se puede obtener del producto)
+    tax_rate = 0.21
+    if rec.x_product_id.taxes_id:
+        tax_rate = rec.x_product_id.taxes_id[0].amount / 100.0
+    
+    iva = rec.x_precio * tax_rate
+    precio_con_iva = rec.x_precio + iva
+    
+    rec.write({
+        'x_iva': iva,
+        'x_precio_iva': precio_con_iva
+    })
+
     if not rec.x_sale_order_id:
         so = env['sale.order'].create({
             'partner_id': rec.x_cliente_id.id,
             'origin': 'ZYS - ' + (rec.x_matricula or ''),
             'note': rec.x_situacion or '',
             'user_id': rec.x_dependiente_id.id if rec.x_dependiente_id else env.uid,
+            'x_zys_pedido_id': rec.id,
         })
         env['sale.order.line'].create({
             'order_id': so.id,

@@ -16,6 +16,7 @@
         <field name="margin_right">3</field>
         <field name="header_line" eval="False"/>
         <field name="header_spacing">3</field>
+        <field name="priority">1</field>
         <field name="dpi">96</field>
     </record>
 
@@ -39,7 +40,7 @@
 
                     <!-- Cabecera -->
                     <div style="text-align:center; border-bottom:2px dashed #000; padding-bottom:4px; margin-bottom:6px;">
-                        <div style="font-size:15px; font-weight:bold; letter-spacing:2px;">ZYS</div>
+                        <div style="font-size:15px; font-weight:bold; letter-spacing:2px;">ZYS - TICKET ACTUALIZADO</div>
                         <div style="font-size:10px;">LUBRICANTES Y RECAMBIOS</div>
                         <div style="font-size:9px; margin-top:2px;">TICKET DE PEDIDO DE PIEZA</div>
                     </div>
@@ -56,7 +57,7 @@
                         </tr>
                         <tr>
                             <td style="font-weight:bold;">CLIENTE</td>
-                            <td><t t-esc="doc.x_cliente_id.name"/></td>
+                            <td style="font-weight:bold;"><t t-esc="doc.x_cliente_id.name"/></td>
                         </tr>
                         <tr>
                             <td style="font-weight:bold;">TEL.</td>
@@ -84,7 +85,19 @@
                         </tr>
                         <tr>
                             <td style="font-weight:bold;">CANTIDAD</td>
-                            <td><t t-esc="doc.x_cantidad"/></td>
+                            <td><t t-esc="int(doc.x_cantidad)"/></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:bold;">PRECIO</td>
+                            <td><t t-esc="doc.x_precio" t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:bold;">IVA (21%)</td>
+                            <td><t t-esc="doc.x_iva" t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:bold;">PRECIO C/ IVA</td>
+                            <td style="font-weight:bold;"><t t-esc="doc.x_precio_iva" t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/></td>
                         </tr>
                         <tr t-if="doc.x_proveedor_id">
                             <td style="font-weight:bold;">PROVEEDOR</td>
@@ -95,11 +108,11 @@
                     <!-- Separador -->
                     <div style="border-top:1px dashed #000; margin:4px 0;"></div>
 
-                    <!-- Estado y notas -->
+                    <!-- Estado y datos -->
                     <table style="width:100%; border-collapse:collapse; margin-bottom:4px;">
                         <tr>
                             <td style="font-weight:bold; width:35%;">ESTADO</td>
-                            <td style="font-weight:bold;"><t t-esc="dict([('PENDIENTE','Pendiente'),('PEDIDO','Pedido'),('RECIBIDO','RECIBIDO ✓'),('RETIRADO','RETIRADO'),('PAGADO','PAGADO'),('DEVOLUCION','Devolución'),('ANULADO','Anulado')]).get(doc.x_status, doc.x_status)"/></td>
+                            <td style="font-weight:bold;"><t t-esc="dict([('PENDIENTE','Pendiente'),('PEDIDO','Pedido'),('PRESUPUESTADO','Presupuestado'),('RECIBIDO','RECIBIDO ✓'),('RETIRADO','RETIRADO'),('PAGADO','PAGADO'),('DEVOLUCION','Devolución'),('ANULADO','Anulado')]).get(doc.x_status, doc.x_status)"/></td>
                         </tr>
                         <tr>
                             <td style="font-weight:bold;">ATENDIDO</td>
